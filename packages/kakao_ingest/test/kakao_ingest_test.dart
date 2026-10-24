@@ -91,6 +91,33 @@ void main() {
     });
   });
 
+  group('실제 내보내기에서 발견한 형식', () {
+    // 2026-10 실제 Android 내보내기 검증에서 나온 패턴을 가상 문장으로 재현.
+    const realShapes = '''
+2026년 3월 5일 오전 9:10
+2026년 3월 5일 오전 9:10, 엄마 : 오늘 병원 다녀왔다
+메시지가 삭제되었습니다.
+2026년 3월 5일 오전 9:12, 엄마 : [쿠팡 로켓 선물]
+홍길동님이 선물을 보냈습니다!
+2026년 3월 5일 오전 9:13, 엄마 : 
+송금 받기 전까지 보낸 분은 내역 상세화면에서 취소할 수 있어요.
+2026년 3월 5일 오전 9:14, 엄마 : 건강에 좋은 습관 열 가지
+1. 물을 자주 마신다
+출처 : 어느 블로그
+2026년 3월 5일 오전 9:15, 엄마 : 밥 잘 챙겨 먹어라
+''';
+
+    test('시각만 있는 줄과 삭제 알림은 메시지에 붙지 않는다', () {
+      final messages = parseKakaoExport(realShapes).messages;
+      expect(messages.first.text, '오늘 병원 다녀왔다');
+    });
+
+    test('송금·선물 카드와 출처가 붙은 퍼온 글은 버린다', () {
+      final cleaned = cleanMessages(parseKakaoExport(realShapes).messages);
+      expect(cleaned.map((m) => m.text), ['오늘 병원 다녀왔다', '밥 잘 챙겨 먹어라']);
+    });
+  });
+
   group('speakers', () {
     test('단톡방에서 그리운 분의 말만 고른다', () {
       final messages = parseKakaoExport(pc).messages;

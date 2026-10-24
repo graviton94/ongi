@@ -17,6 +17,8 @@ final _mobileTimestamp = RegExp(
     r'^(\d{4}년 \d{1,2}월 \d{1,2}일|\d{4}\. \d{1,2}\. \d{1,2}\.) (오전|오후) \d{1,2}:\d{2}');
 // 모바일 날짜 구분선: 2024년 5월 1일 수요일
 final _mobileDateLine = RegExp(r'^\d{4}년 \d{1,2}월 \d{1,2}일 [월화수목금토일]요일$');
+// 시각 없이 한 줄로 끼어드는 시스템 알림. 앞 메시지에 이어 붙이지 않는다.
+final _bareSystemLine = RegExp(r'^메시지가 삭제되었습니다\.$');
 
 /// 카카오톡 대화 내보내기(.txt) 원문을 메시지 목록으로 바꾼다.
 ///
@@ -69,7 +71,9 @@ ParseResult parseKakaoExport(String raw) {
       continue;
     }
 
-    if (_mobileTimestamp.hasMatch(line) || _mobileDateLine.hasMatch(line)) {
+    if (_mobileTimestamp.hasMatch(line) ||
+        _mobileDateLine.hasMatch(line) ||
+        _bareSystemLine.hasMatch(line)) {
       skipped++;
       canContinue = false;
       continue;
