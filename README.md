@@ -56,6 +56,7 @@
 | **04** | [**인디 개발자 실전 운영 계획**](documents/04_indie_developer_action_plan.md) | 소스별 파싱 전략, 1분 팩트 시트, AI 기억 중화, 테스트 기간 '비용 0원' 돌파법 |
 | **05** | [**디자인 철학 및 비주얼 가이드라인**](documents/05_design_philosophy_and_system.md) | 전사 금기 4대 헌장, 한지/우드/세이지 기본 톤 명세, 듀얼 타이포그래피 철학 |
 | **06** | [**MVP 범위 및 의사결정 기록**](documents/06_mvp_scope_and_decisions.md) | 첫 출시 범위, 확정된 결정과 근거, 출시 전 확인할 법률·정책 항목 |
+| **07** | [**법적 리스크 및 동의 구조**](documents/07_legal_risk_and_consent.md) | 추모감정 침해, 디지털 유산, 사자명예훼손, AI 표시 의무, 생전 사후 이용 특약 |
 
 ---
 
