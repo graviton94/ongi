@@ -1,0 +1,7 @@
+node_modules/
+# 실제 가족 데이터와 결과물은 저장소에 넣지 않는다.
+data/
+*.local.json
+core.json
+loved_one.json
+report*.md
