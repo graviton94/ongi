@@ -127,6 +127,13 @@ void main() {
           messagesOf(messages, '할머니').map((m) => m.speaker).toSet(), {'할머니'});
     });
 
+    test('여러 대화를 합치면 시간순으로 정렬하고 중복을 없앤다', () {
+      final a = parseKakaoExport(android).messages;
+      final merged = mergeMessages([messagesOf(a, '엄마'), messagesOf(a, '엄마')]);
+      expect(merged, hasLength(messagesOf(a, '엄마').length));
+      expect(merged.first.time, DateTime(2024, 5, 1, 0, 5));
+    });
+
     test('업로더가 대화에 없으면 참여자가 아니다', () {
       final messages = parseKakaoExport(pc).messages;
       expect(isParticipant(messages, '나'), isTrue);

@@ -38,7 +38,7 @@ cd engine && npm install
 # 1) 카톡 파일 → 그분의 메시지 (packages/kakao_ingest에서)
 cd packages/kakao_ingest
 dart run kakao_ingest:export ~/Downloads/엄마.txt                     # 화자 목록 확인
-dart run kakao_ingest:export ~/Downloads/엄마.txt --speaker 엄마 --me 민수 \
+dart run kakao_ingest:export ~/Downloads/엄마.txt ~/Downloads/가족방.txt --speaker 엄마 --me 민수 \
   --out ../../engine/data/mom.loved_one.json
 # 파싱이 안 되면: --shape-report 출력(내용 없이 줄 모양만)을 공유해 주세요.
 

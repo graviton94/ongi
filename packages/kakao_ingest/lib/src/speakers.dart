@@ -26,3 +26,16 @@ List<ChatMessage> messagesOf(Iterable<ChatMessage> messages, String speaker) =>
 /// 업로더가 이 대화의 참여자인지(문서 07 1.2). 참여자가 아니면 업로드를 보류한다.
 bool isParticipant(Iterable<ChatMessage> messages, String uploaderName) =>
     messages.any((m) => m.speaker == uploaderName);
+
+/// 여러 대화방의 메시지를 시간순으로 합친다. 같은 시각·화자·내용은 한 번만 남긴다.
+/// 1:1 대화와 단체방에서 같은 분의 말을 함께 모을 때 쓴다.
+List<ChatMessage> mergeMessages(Iterable<List<ChatMessage>> chats) {
+  final seen = <String>{};
+  final merged = [
+    for (final chat in chats)
+      for (final m in chat)
+        if (seen.add('${m.time.toIso8601String()}|${m.speaker}|${m.text}')) m,
+  ];
+  merged.sort((a, b) => a.time.compareTo(b.time));
+  return merged;
+}
