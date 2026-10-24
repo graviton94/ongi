@@ -111,6 +111,17 @@ describe("가드레일", () => {
   });
 });
 
+describe("세션 상태", () => {
+  it("저장한 상태로 대화를 이어 간다", async () => {
+    const first = new ChatSession(new FakeLlm(), core, facts);
+    await first.send("엄마 밥 먹었어?");
+    const llm = new FakeLlm();
+    const resumed = new ChatSession(llm, core, facts, [], "low", first.state);
+    await resumed.send("나도 먹었어");
+    assert.deepEqual(llm.chatRequests[0]!.turns.map((t) => t.text), ["엄마 밥 먹었어?", "밥은 먹었니^^", "나도 먹었어"]);
+  });
+});
+
 describe("안전 검사 실패", () => {
   class BrokenLlm extends FakeLlm {
     override async structured<S extends z.ZodType>(_req: StructuredRequest<S>): Promise<{ value: z.infer<S>; usage: { input_tokens: number; output_tokens: number } }> {

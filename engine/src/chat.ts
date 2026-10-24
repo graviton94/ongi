@@ -14,6 +14,12 @@ const CRISIS_FOLLOWUP_NOTE =
 
 export type ReplyKind = "persona" | "crisis" | "deflected" | "refused";
 
+/** 대화를 이어 가기 위한 저장 상태. 클라우드 세션에서 한 턴씩 나눠 실행할 때 쓴다. */
+export interface SessionState {
+  turns: Turn[];
+  crisisSeen: boolean;
+}
+
 export interface Reply {
   kind: ReplyKind;
   text: string;
@@ -33,8 +39,17 @@ export class ChatSession {
     private readonly facts: FactSheet,
     news: RecentNews[] = [],
     private readonly effort: Effort = (process.env.CHAT_EFFORT as Effort) ?? "low",
+    state?: SessionState,
   ) {
     this.system = buildSystemPrompt(core, facts, news);
+    if (state) {
+      this.turns.push(...state.turns);
+      this.crisisSeen = state.crisisSeen;
+    }
+  }
+
+  get state(): SessionState {
+    return { turns: [...this.turns], crisisSeen: this.crisisSeen };
   }
 
   get systemPrompt(): string {

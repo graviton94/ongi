@@ -14,7 +14,16 @@
 * `extract`는 팩트 시트의 `aliases`(가족 이름·별명)를 `{자녀1}` 같은 자리표시자로 바꾼 뒤 모델에 보냅니다. 결과 `core.json`에 식별 정보가 남아 있으면 경고하고 종료 코드 2를 돌려줍니다.
 * `chat`, `eval`은 자리표시자를 팩트 시트의 호칭(`howCalled`)으로 되돌려 대화합니다.
 
-## 준비
+## 클라우드 세션에서 실행 (기본 방법)
+
+로컬 터미널 없이 진행합니다([문서 08](../documents/08_mvp_build_roadmap.md) 0-1절).
+
+1. 클라우드 환경 설정에 `ANTHROPIC_API_KEY`를 등록하고 새 세션을 엽니다.
+2. 세션 대화에 카톡 내보내기 `.txt`를 업로드하고, 팩트 시트 내용(호칭, 가족 이름·별명, 생신 등)을 대화로 알려 줍니다.
+3. 세션이 아래 "실행 순서"를 대신 실행하고 보고서와 채점지를 파일로 돌려줍니다.
+4. 대화 테스트는 세션에 "엄마에게: ..."처럼 보내면 `chat-turn`으로 한 턴씩 이어 갑니다.
+
+## 준비 (터미널이 있는 경우)
 
 ```bash
 cd engine && npm install
@@ -43,8 +52,9 @@ npm run cli -- extract data/mom.loved_one.json data/mom.facts.json --out data/mo
 # 4) system 프롬프트 눈으로 확인 (API 호출 없음)
 npm run cli -- prompt data/mom.core.json data/mom.facts.json
 
-# 5) 직접 대화
+# 5) 직접 대화 (터미널) / 한 턴씩 이어 가기 (클라우드 세션)
 npm run cli -- chat data/mom.core.json data/mom.facts.json
+npm run cli -- chat-turn data/mom.core.json data/mom.facts.json data/mom.state.json "엄마 밥 먹었어?"
 
 # 6) 평가: eval/cases.sample.json을 복사해 실제 대화에서 뽑은 질문을 30~50개로 늘린 뒤
 npm run cli -- eval data/mom.core.json data/mom.facts.json data/mom.cases.json --out data/mom.report.md

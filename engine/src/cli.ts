@@ -3,12 +3,13 @@
 //   npm run cli -- prompt  <core.json> <facts.json>                    system 프롬프트 확인 (API 호출 없음)
 //   npm run cli -- extract <loved_one.json> <facts.json> [--out core.json]
 //   npm run cli -- chat    <core.json> <facts.json> [--news news.json]
+//   npm run cli -- chat-turn <core.json> <facts.json> <state.json> "<메시지>"   한 턴만 보내고 상태 저장
 //   npm run cli -- eval    <core.json> <facts.json> <cases.json> [--out report.md]
 //
 // API 호출 명령은 ANTHROPIC_API_KEY(또는 `ant auth login` 프로필)가 필요하고 실제 비용이 든다.
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
-import { ChatSession } from "./chat.js";
+import { ChatSession, type SessionState } from "./chat.js";
 import { CostMeter } from "./cost.js";
 import { renderBlindSheet, renderReport, runEval, type EvalCase } from "./evaluate.js";
 import { extractPersonaCore } from "./extract.js";
@@ -64,6 +65,16 @@ async function main(argv: string[]) {
       console.log(`이번 대화 비용: 약 ${session.meter.krw.toFixed(1)}원 (${session.meter.callCount}회 호출)`);
       return;
     }
+    case "chat-turn": {
+      // 터미널 대화가 어려운 환경(클라우드 세션)에서 한 턴씩 이어 가기 위한 명령.
+      const [corePath, factsPath, statePath, text] = args;
+      const state = existsSync(statePath!) ? readJson<SessionState>(statePath!) : undefined;
+      const session = new ChatSession(new AnthropicLlm(), readCore(corePath!), readJson<FactSheet>(factsPath!), [], undefined, state);
+      const reply = await session.send(text!);
+      writeFileSync(statePath!, JSON.stringify(session.state, null, 2));
+      console.log(JSON.stringify({ kind: reply.kind, risk: reply.risk, text: reply.text, costKrw: Number(session.meter.krw.toFixed(2)) }));
+      return;
+    }
     case "eval": {
       const results = await runEval(
         new AnthropicLlm(),
@@ -80,7 +91,7 @@ async function main(argv: string[]) {
       return;
     }
     default:
-      console.error("명령: prompt | extract | chat | eval (사용법은 src/cli.ts 상단 주석 참고)");
+      console.error("명령: prompt | extract | chat | chat-turn | eval (사용법은 src/cli.ts 상단 주석 참고)");
       process.exitCode = 64;
   }
 }
