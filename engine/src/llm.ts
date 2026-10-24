@@ -42,8 +42,14 @@ export interface Llm {
 
 export class RefusalError extends Error {}
 
+// 클라우드 세션은 ANTHROPIC_BASE_URL을 세션 내부 주소로 설정해 둔다. 서비스 호출이 그쪽으로 가지 않도록
+// 주소를 명시한다. 다른 주소가 필요하면 ONGI_ANTHROPIC_BASE_URL로 바꾼다.
+const API_BASE_URL = process.env.ONGI_ANTHROPIC_BASE_URL ?? "https://api.anthropic.com";
+
 export class AnthropicLlm implements Llm {
-  constructor(private readonly client = new Anthropic()) {}
+  constructor(
+    private readonly client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, baseURL: API_BASE_URL }),
+  ) {}
 
   async structured<S extends z.ZodType>(req: StructuredRequest<S>) {
     // Haiku 5.5에는 서버 측 fallback이 없다. 거절되면 호출한 쪽에서 처리한다.
