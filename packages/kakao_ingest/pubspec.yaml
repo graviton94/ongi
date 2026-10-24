@@ -1,0 +1,11 @@
+name: kakao_ingest
+description: 카카오톡 대화 내보내기 파일을 단말에서 파싱하고 정제하는 순수 Dart 패키지.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

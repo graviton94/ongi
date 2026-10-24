@@ -9,7 +9,7 @@
 | 서비스명 | 발급 항목 / 파일 | 용도 | 비고 |
 | :--- | :--- | :--- | :--- |
 | **Google Play Console** | 개발자 계정 등록 ($25 1회) | 안드로이드 배포, 라이선스 테스터 IAP 테스트 | 14일 비공개 테스트 대비 최우선 |
-| **Firebase Console** | `google-services.json` | Android 앱 등록, Firestore DB, FCM 무료 푸시 | Spark(무료) 플랜 시작 |
+| **Firebase Console** | `google-services.json` | Android 앱 등록, Firestore DB, FCM 무료 푸시, Cloud Functions 게이트웨이 | Cloud Functions는 Blaze(종량제) 필요. 무료 할당량 안에서는 사실상 0원, 예산 알림 설정 |
 | **Claude Console** | `ANTHROPIC_API_KEY` | 1인칭 대화, 기억 추출(구조화 JSON), 위험도 분류 | AI 제공사를 Claude 하나로 통일 |
 | **Arweave 지갑 + Turbo(ar.io)** | 지갑 키 파일(JWK) + Turbo 크레딧 | 기억 코어 영구 봉인 업로드 대납 | 크레딧은 카드 충전 가능(충전 수수료 있음, 환불 불가). 착수 시 최신 수수료 확인 |
 
